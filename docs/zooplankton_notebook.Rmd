@@ -1,0 +1,135 @@
+---
+title: "Classification d'organismes zooplanctoniques"
+author: "___"
+date: "`r Sys.Date()`"
+bibliography: references.bib
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction et but
+
+<!--% Introduisez les données et le but du travail en 3 ou 4 phrases ci-dessous -->
+
+[@2004grosjean]
+
+@2020fullgrabe
+
+<!--# deux citations ont été ajoutées ci-dessus afin de citer correctement vos sources. Incorporez la forme la plus appropriée dans le texte de votre introduction. -->
+
+# Résultats
+
+```{r import}
+
+```
+
+## Optimisation des attributs
+
+<!--% Dans cette section, vous allez explorer le jeu de données et retravailler le tableau de manière à aboutir à un data frame qui ne contienne que la variable à prédire et vos attributs retravaillés. Les chunks vides suivant vous suggèrent de réaliser au moins 3 graphiques et une sélection des variables... Ne prenez pas plus d'une heure pour cela! Le document `quivy_master_thesis_appendix3.pdf` est un bon point de départ pour optimiser les attributs. -->
+
+```{r visu1}
+
+```
+
+```{r visu2}
+
+```
+
+```{r visu3}
+
+```
+
+```{r select}
+
+```
+
+## Optimisation des classifieurs
+
+<!--% Réalisez un set d'apprentissage et un set de test. Divisez vos données en 2. 50% de vos observations sont à employer dans le set d'apprentissage. -->
+
+```{r training}
+
+```
+
+<!--% Pour chacune des 4 méthodes (k plus proche voisin, quantification vectorielle, arbre de partitionnement et forêt aléatoire) entraînez un classifieur et optimisez-le en choisissant les meilleurs paramètres. Indiquez les différentes valeurs des paramètres testés mais ne conservez que le meilleur modèle (ne dupliquez pas les chunks !) -->
+
+### K plus proches voisins
+
+```{r knn}
+
+```
+
+```{r knn_confusion}
+
+```
+
+```{r knn_metrics}
+
+```
+
+<!--% Paramètres testés et critère de choix du classifieur optimal ci-dessous en 2 phrases max. -->
+
+### Quantification vectorielle
+
+```{r lvq}
+
+```
+
+```{r lvq_confusion}
+
+```
+
+```{r lvq_metrics}
+
+```
+
+<!--% Paramètres testés et critère de choix du classifieur optimal ci-dessous en 2 phrases max. -->
+
+### Partitionnement récursif
+
+```{r rpart}
+
+```
+
+```{r rpart_plot}
+
+```
+
+```{r rpart_confusion}
+
+```
+
+```{r rpart_metrics}
+
+```
+
+<!--% Paramètres testés et critère de choix du classifieur optimal ci-dessous en 2 phrases max. -->
+
+### Forêt aléatoire
+
+```{r rforest}
+
+```
+
+```{r rf_plot}
+
+```
+
+```{r rf_confusion}
+
+```
+
+```{r rf_metrics}
+
+```
+
+<!--% Paramètres testés et critère de choix du classifieur optimal ci-dessous en 2 phrases max. -->
+
+## Discussion et conclusion
+
+<!--% Indiquez ci-dessous en 5 phrases maximum quel classifieur vous considérez comme le meilleur, pourquoi et sur base de quelles métriques -->
+
+# Bibliographie
