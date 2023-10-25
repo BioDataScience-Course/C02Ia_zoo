@@ -1,0 +1,252 @@
+---
+title: "Classification supervisée d'organismes zooplanctoniques"
+author: "___"
+date: "`r Sys.Date()`"
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+editor: visual
+lang: fr
+bibliography: "biblio/references.bib"
+---
+
+```{r setup, include=FALSE}
+# This is needed to the SDD test suite, do not use in a "real" project
+if (!"tools:tests" %in% search())
+  source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
+
+# Configure SciViews::R environment
+___, lang = "fr")
+```
+
+# Introduction et but
+
+<!--% Lisez attentivement l'introduction et but, ainsi que le matériel et méthodes. Ces sections sont importantes pour bien comprendre le contexte du travail. Elles sont déjà rédigées pour vous donner une bonne idée de ce qui doit y figurer. Recherchez les publications citées et trouvez l'information manquante que vous compléterez (trois mots manquants marqués ___). -->
+
+@2020fullgrabe ont étudié le mésozooplancton en Corse. Pour dénombrer les groupes taxonomiques présents, ils ont numérisé du plancton échantillonné de 2004 à **`___`** et ont utilisé l'analyse d'image pour détourer et ensuite mesurer les organismes planctoniques sur les images [@2004grosjean]. Des spécialistes du plancton ont enfin constitué un set regroupant ces attributs et une identification des organismes en 16 classes différentes.
+
+Notre but est de réaliser un classifieur capable d'identifier le zooplancton de Corse le plus versatile et efficace possible sur base de ces données.
+
+# Matériel et méthodes
+
+Le plancton a été récolté entre 2004 et 2016 dans la baie de `___` par trait horizontal sous la surface à l'aide d'un filet à plancton de type WP2 de 200µm de maille et une ouverture de 60cm de diamètre. Le plancton a été immédiatement fixé au formaldéhyde tamponné à 4%. Les échantillons ont ensuite été numérisés à l'aide d'un scanner Epson `___` et l'analyse d'image a été réalisée à l'aide du logiciel Zoo/PhytoImage. Plusieurs milliers d'individus ont ensuite été manuellement sur les images et classés en 16 catégories différentes pour établir les sets d'apprentissage et de test.
+
+L'analyse est réalisée dans la [SciViews Box 2023](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io) (Linux) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {mlearning} version `r packageVersion("mlearning")` est utilisé pour entraîner et ensuite étudier les performances des différents classifieurs.
+
+# Résultats
+
+```{r import, record='RODFS', object='zoo'}
+zoo <- ___
+```
+
+<!--% Utilisez la fonction skim() du package {skimr} pour avoir une première description des données -->
+
+```{r desc, record='RNP', arg='skim_type'}
+___
+```
+
+<!--% Commentez ces tableaux en sélectionnant les phrases ci-dessous. -->
+
+<!--# Lorsque vous voyez un chunk avec un `select_answer()` qui présente une série d'items à cocher, vous ne modifiez RIEN dans ce chunk si ce n'est rajouter des coches en forme de 'x' entre les crochets [] en regard des items corrects pour donner ceci: [x] -   item correct. -->
+
+```{r desccomment, output="asis"}
+select_answer(r"-{
+[] -   Le jeu de données contient 6933 observations et 40 variables dont trois sont qualitatives.
+[] -   Il n'y a aucune valeur manquante.
+[] -   Il y a des valeurs manquantes dans les variables qualitatives.
+[] -   Il y a des valeurs manquantes dans les variables quantitatives.
+[] -   Il y a des valeurs manquantes dans plusieurs variables.
+[] -   Les trois variables qualitatives `Class`, `Id` et `Label` seront utilisées pour la classification.
+[] -   Parmi les variables qualitatives, seul `Label` nous est utile : les deux autres (`Id` et `Class`) identifient les individus dans les échantillons, mais cette information n'est pas utile pour le classifieur.
+[] -   Parmi les variables qualitatives, seule `Class` nous est utile : les deux autres (`Id` et `Label`) identifient les individus dans les échantillons, mais cette information n'est pas utile pour le classifieur.
+[] -   Les variables quantitatives sont toutes utiles comme attributs permettant de classer notre plancton.
+[] -   Nous devons étudier les variables quantitatives plus à fond, mais les variables `Item` (numéro de l'individu) et `Dil` (facteur de dilution de l'échantillon) ne nous intéressent *a priori* pas, car ce ne sont pas des mesures morphométriques ou de transparence des individus.}-")
+```
+
+## Feature engineering
+
+<!--% Dans cette section, vous allez retravailler le tableau de manière à aboutir à un data frame qui ne contienne que la variable à prédire et vos attributs. Vous allez calculer des attributs dérivés potentiellement intéressants et vous allez aussi éliminer des variables inutiles pour la classification. Le document `biblio/quivy_master_thesis_appendix3.pdf` est un bon point de départ pour vous informer sur les attributs disponibles ou calculables. Complétez les zones manquantes marquées ___. -->
+
+Les techniques d'analyse d'image suggèrent différentes **variables calculées** (note : vous devez faire une étude attentive de la bibliographie pour cela en pratique). Nous ajoutons celles qui sont renseignées dans l'appendice 3 du mémoire de Thomas Quivy (voir biblio/quivy_master_thesis_appendix3.pdf) :
+
+-   Elong = `___` / Minor
+
+-   CentBoxD = ((BX + Width/2 - X)^2^ + (BY + Height/2 - Y)^2^)^1/2^
+
+-   GrayCenBoxD = ((BX + Width/2 - XM)^2^ + (BY + Height/2 - YM)^2^)^1/2^
+
+-   CentroidsD = ((X - XM)^2^ + (Y - YM)^2^)^1/2^
+
+-   Range = Max - Min
+
+-   `___` = (Max - Mean) / Range
+
+-   SDNorm = StdDev / Range
+
+-   CV = StdDev / `___` \* 100
+
+-   ECD = 2 \* (Area / $\Pi$)^1/2^ (déjà calculé)
+
+<!--% Calculez maintenant ces attributs dérivés. Rappelez-vous que x^1/2 est la racine carrée de x et se note sqrt(x) dans R. -->
+
+```{r attrib, record='RODFS', object='zoo'}
+zoo <- ___
+```
+
+À l'examen de la signification des différentes variables quantitatives, il apparaît que `X`, `Y`, `XM`, `YM`, `Width`, `Height`, `BX`, `BY`, `XStart` et `YStart` sont des variables qui identifient des pixels sur l'image et ne sont pas des mesures morphométriques ou de transparence utiles ici. Elles ne nous sont plus utiles une fois nos variables calculées. De plus `Angle`, `FeretX`, `FeretY` et `FeretAngle` sont des variables qui identifient la position et l'orientation des individus dans l'image, et ceci ne porte pas non plus d'information utile pour leur identification (disposition au hasard du plancton dans les images).
+
+Nous éliminons donc ces variables, ainsi que celles que nous avions déjà identifiées comme inutiles plus haut.
+
+<!--% Éliminez les variables inutiles ci-dessous et placez le résultat dans zoo2. Vérifiez attentivement s'il n'y a pas d'autre(s) variable(s) à éliner... Hint : oui, il y en a une ! -->
+
+```{r select, record='RODFS', object='zoo2'}
+zoo2 <- ___
+```
+
+Nous réalisons une ACP pour voir les corrélations entre attributs.
+
+<!--% Effectuez à présent une ACP pour voir comment les attributs se distribuent dans l'espace des variables. -->
+
+```{r acp, record='ROP', object='zoo2_pca', arg='call,sdev'}
+SciViews::R("explore")
+zoo2_pca <- ___
+chart$___
+```
+
+<!--% interprétation… -->
+
+```{r acpcomment, output="asis"}
+select_answer(r"-{
+[] -   La variance se distribue sur trop d'axes pour permettre une représentation correcte.
+[] -   La variance est principalement distribuée sur cinq axes et nous ne pouvons pas représenter correctement les données en deux dimensions.
+[] -   La variance est principalement distribuée sur trois axes et nous ne pouvons pas représenter correctement les données en deux dimensions.
+[] -   Les deux premiers axes comptent pour une grosse majorité de la variance. Nous pouvons représenter les données dans le premier plan de l'ACP.
+[] -   La variance est principalement distribuée sur le premier axe. Le premier plan de l'ACP reprend une bonne part de la variance totale et est utilisable pour la représentation des données.}-")
+```
+
+<!--% Visualisez les attributs dans l'espace des variables dans le premier plan principal de l'ACP -->
+
+```{r acpvars, record='RNP', arg='labels'}
+chart$___
+```
+
+<!--% Interprétez ce graphique -->
+
+```{r acpvarscomment, output="asis"}
+select_answer(r"-{
+[] -   Le premier plan de l'ACP représente environ 55% de la variance.
+[] -   Les attributs sont tous bien représentés dans le plan principal de l'ACP.
+[] -   Aucun attribut n'est bien représenté dans le premier plan de l'ACP. Nous n'avons aucunes corrélations entre les différentes variables.
+[] -   Aucun attribut n'est bien représenté dans le premier plan de l'ACP. Nous avons des corrélations fortes entre plusieurs variables.
+[] -   Les variables de taille (ECD…) et de forme (Solidity, Circularity…) sont corrélées avec le premier axe (mais faiblement).
+[] -   Les variables de transparence (Mean, StdDev, MeanPos…) sont faiblement corrélées avec le premier axe.
+[] -   Les variables de taille (ECD…) et de forme (Solidity, Circularity…) sont corrélées avec le second axe (mais de manière assez faible).
+[] -   Les variables de transparence (Mean, StdDev, MeanPos…) sont faiblement corrélées avec le second axe.}-")
+```
+
+## Phase d'apprentissage et optimisation des trois classifieurs
+
+<!--% Pour chacune des trois méthodes (k plus proche voisin, arbre de partitionnement et forêt aléatoire) entraînez un classifieur et optimisez-le en choisissant les meilleurs paramètres pour chacun d'eux (mesure des performances par validation croisée dix fois). Indiquez les différentes valeurs des paramètres testés mais ne conservez que le meilleur modèle (ne dupliquez pas les chunks !) -->
+
+### K plus proches voisins
+
+```{r knn, record='ROP', object='zoo2_knn', arg='k'}
+set.seed(16322)
+zoo2_knn <- ___
+```
+
+<!--% matrice de confusion par validation croisée dix fois et graphique -->
+
+```{r knn_confusion, record='ROA', object='zoo2_knn_conf', arg='col.freqs'}
+set.seed(374)
+zoo2_knn_conf <- ___
+plot(zoo2_knn_conf)
+```
+
+<!--% Calculez les métriques globales, ainsi que le score F, le rappel et la précision par classe à partir de la matrice de confusion (pas toutes les métriques !) -->
+
+```{r knn_metrics, record='RNA', arg='names,class'}
+___
+```
+
+<!--% Indiquez ci-dessous les paramètres testés pour votre classifieur k plus proches voisins en 2 phrases max. -->
+
+...explication de votre optimisation ici...
+
+### Partitionnement récursif
+
+```{r rpart, record='ROP', object='zoo2_rpart', arg='control'}
+set.seed(235)
+zoo2_rpart <- ___
+```
+
+<!--% Graphique du partitionnement récursif -->
+
+```{r rpart_plot}
+set.seed(63)
+plot(___)
+text(___)
+```
+
+<!--% matrice de confusion par validation croisée dix fois et graphique -->
+
+```{r rpart_confusion, record='ROA', object='zoo2_rpart_conf', arg='col.freqs'}
+set.seed(94785)
+zoo2_rpart_conf <- ___
+plot(zoo2_rpart_conf)
+```
+
+<!--% Calculez les métriques globales, ainsi que le score F, le rappel et la précision par classe à partir de la matrice de confusion (pas toutes les métriques !) -->
+
+```{r rpart_metrics, record='RNA', arg='names,class'}
+___
+```
+
+<!--% Indiquez ci-dessous les paramètres testés pour votre classifieur partitionnement récursif en 2 phrases max. -->
+
+...explication de votre optimisation ici...
+
+### Forêt aléatoire
+
+```{r rforest, record='ROP', object='zoo2_rf', arg='ntree,mtry'}
+set.seed(94)
+zoo2_rf <- ___
+```
+
+<!--% Graphique de l'erreur en fonction du nombre d'arbres -->
+
+```{r rf_plot}
+___
+```
+
+<!--% matrice de confusion par validation croisée dix fois et graphique -->
+
+```{r rf_confusion, record='ROA', object='zoo2_rf_conf', arg='col.freqs'}
+set.seed(18423087)
+zoo2_rf_conf <- ___
+plot(zoo2_rf_conf)
+```
+
+<!--% Calculez les métriques globales, ainsi que le score F, le rappel et la précision par classe à partir de la matrice de confusion (pas toutes les métriques !) -->
+
+```{r rf_metrics, record='RNA', arg='names,class'}
+___
+```
+
+<!--% Indiquez ci-dessous les paramètres testés pour votre forêt aléatoire en 2 phrases max. -->
+
+...explication de votre optimisation ici...
+
+<!--% Justification de la ou des métriques de performance prises en compte et critère de choix du classifieur optimal parmi les trois ci-dessous en 2 phrases max. -->
+
+...choix des métriques ici...
+
+# Discussion et conclusion
+
+<!--% Indiquez ci-dessous en 4 à 6 phrases maximum quel classifieur vous considérez comme le meilleur et s'il vous parait adéquat ici pour un déploiement (allez dans le détail pour les classes éventuellement problématiques). -->
+
+...votre discussion ici...
+
+# Bibliographie

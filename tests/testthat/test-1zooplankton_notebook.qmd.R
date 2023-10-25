@@ -125,9 +125,9 @@ test_that("La section feature engineering (équations) est-elle complétée ?", 
   expect_true((rmd_select(zoo, by_section("Feature engineering")) |>
       as_document() |> grepl(get_word("8D?<r@A"), x = _, fixed = TRUE) |> any()))
   expect_true((rmd_select(zoo, by_section("Feature engineering")) |>
-      as_document() |> grepl(get_word("^O01z4dTH"), x = _, fixed = TRUE) |> any()))
+      as_document() |> grepl(get_word("/O$Jt@H18!XGB"), x = _, fixed = TRUE) |> any()))
   expect_true((rmd_select(zoo, by_section("Feature engineering")) |>
-      as_document() |> grepl(get_word("^O01b"), x = _, fixed = TRUE) |> any()))
+      as_document() |> grepl(get_word("gzmfY"), x = _, fixed = TRUE) |> any()))
   # Un ou plusieurs champs manquants n'ont pas été complétés correctement
   # Lisez bien le document biblio/quivy_master_thesis_appendix3.pdf et retrouvez
   # les trois mots manquants que vous indiquez dans les équations aux
