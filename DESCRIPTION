@@ -1,4 +1,4 @@
-Package: C02Ia_zooplankton
+Package: C02Ia_zoo
 Type: Package
 Version: 2.0.0
 Title: Classification supervisée d'organismes zooplanctoniques
@@ -13,7 +13,7 @@ Authors@R: c(
 Depends: R (>= 4.2.3)
 SystemRequirements: SciViews Box 2023 (https://www.sciviews.org/software/svbox/)
 License: MIT
-URL: https://github.com/BioDataScience-Course/C02Ia_zooplankton
-BugReports: https://github.com/BioDataScience-Course/C02Ia_zooplancton/issues
+URL: https://github.com/BioDataScience-Course/C02Ia_zoo
+BugReports: https://github.com/BioDataScience-Course/C02Ia_zoo/issues
 Encoding: UTF-8
 Language: fr-FR
