@@ -2,29 +2,27 @@
 
 # Avant-propos
 
-Ce projet nécessite d'avoir assimilé l'ensemble des notions du premier et second modules du cours de science des données biologiques 3. Le template relatif à ce dépôt est <https://github.com/BioDataScience-Course/C02Ia_zooplankton>.
+Ce projet nécessite d'avoir assimilé l'ensemble des notions des premier et second modules du cours de science des données biologiques 3. Il correspond au dépôt GitHub <https://github.com/BioDataScience-Course/C02Ia_zooplankton>.
 
 # Objectifs
 
-Ce projet est un projet **individuel**, **cadré** et d'une durée maximale de **3h**.
-
-Dans ce projet vous devrez :
+Ce projet est un projet **individuel** et **cadré**. Vous devrez :
 
 -   Optimiser les attributs utilisés pour la classification d'un jeu de données
--   Entraîner et optimiser quatre classifieurs différents
--   Comparer les classifieurs et choisir le meilleur
+-   Entraîner et optimiser trois classifieurs différents
+-   Comparer les classifieurs et choisir le meilleur d'entre eux
 
 # Consignes
 
-Dans le carnet de notes `docs/zooplankton_notebook.Rmd`, vous allez créer le classifieur le plus performant pour classer du zooplancton sur base de mesures effectuées par analyse d'image. Vous ne séparerez pas le jeu de données initial en set d'apprentissage et de test, mais vous utiliserez la validation croisée dix fois que vous venez d'apprendre dans le module 2 du cours pour évaluer les performances de vos classifieurs que vous entraînerez par ailleurs sur l'ensemble des données (réduites de celles qui contiennent éventuellement des valeurs manquantes).
+Dans le carnet de notes `zooplankton_notebook.qmd`, vous allez créer le classifieur le plus performant pour classer du zooplancton sur base d'attributs obtenus par analyse d'image. Vous ne séparerez pas le jeu de données initial en set d'apprentissage et de test, mais vous utiliserez la validation croisée dix fois que vous venez d'apprendre dans le module 2 du cours pour évaluer les performances de vos classifieurs que vous entraînerez par ailleurs sur l'ensemble des données (réduites de celles qui contiennent éventuellement des valeurs manquantes).
 
 Trois étapes sont importantes ici :
 
--   la sélection des attributs et le calcul éventuel de nouveaux attributs dérivés (1h max)
+-   la sélection des attributs et le calcul éventuel de nouveaux attributs dérivés par feature engineering (temps estimé à 1h)
 
--   l'entraînement de quatre classifieurs avec les méthodes k plus proches voisins, quantification vectorielle, partitionnement récursif et forêt aléatoire, ainsi que l'optimisation de chacun d'eux (1h30 max)
+-   l'entraînement de trois classifieurs avec les méthodes k plus proches voisins, partitionnement récursif et forêt aléatoire, ainsi que l'optimisation de chacun d'eux (temps estimé à 2h max)
 
--   le choix du meilleur classifieur pour classer automatiquement un échantillon de plancton (justifiez votre choix dans les conclusions, y compris la ou les métriques que vous avez utilisées et pourquoi) (30min max, y compris rédaction de l'introduction et de la conclusion)
+-   le choix du meilleur classifieur pour classer automatiquement un échantillon de plancton et la justification de votre choix dans les conclusions (y compris la ou les métriques que vous avez utilisées et pourquoi) (30min max).
 
 # Informations sur les données
 
@@ -37,7 +35,3 @@ L'article suivant propose des explications détaillées sur l'identification d'o
 [Philippe Grosjean, Marc Picheral, Caroline Warembourg, Gabriel Gorsky, Enumeration, measurement, and identification of net zooplankton samples using the ZOOSCAN digital imaging system, ICES Journal of Marine Science, Volume 61, Issue 4, 2004, Pages 518--525](https://doi.org/10.1016/j.icesjms.2004.03.012)
 
 Un guide pratique d'identification en français est à également à votre disposition : [Guide d'identification des organismes mésozooplanctoniques de la Mer Ligurienne](https://econum.github.io/zooimage_mesozooplankton_guide1/)
-
-# Rappel important
-
-N'oubliez pas que le plagiat est interdit. Ce projet est **individuel**. Si jamais vous êtes bloqué et que vous avez fait appel **ponctuellement** à l'aide d'un de vos collègues, vous **devez** l'indiquer à l'endroit concerné. On cite généralement un élément venant de quelqu'un d'autre comme (John Doe, comm. pers.) pour "communication personnelle". Citez vos sources. Les différents projets seront comparés pour détecter les copies non renseignées.
