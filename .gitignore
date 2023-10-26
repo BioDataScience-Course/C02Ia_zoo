@@ -29,7 +29,7 @@ figure-html/
 *.tex
 *.log
 *.aux
-*.pdf
+/*.pdf
 *.docx
 *.doc
 *.pptx
