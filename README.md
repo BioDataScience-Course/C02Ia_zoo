@@ -18,11 +18,11 @@ Dans le carnet de notes `zooplankton_notebook.qmd`, vous allez créer le classif
 
 Trois étapes sont importantes ici :
 
--   la sélection des attributs et le calcul éventuel de nouveaux attributs dérivés par feature engineering (temps estimé à 1h)
+-   la sélection des attributs et le calcul éventuel de nouveaux attributs dérivés par feature engineering (temps estimé à 2h)
 
--   l'entraînement de trois classifieurs avec les méthodes k plus proches voisins, partitionnement récursif et forêt aléatoire, ainsi que l'optimisation de chacun d'eux (temps estimé à 2h max)
+-   l'entraînement de trois classifieurs avec les méthodes k plus proches voisins, partitionnement récursif et forêt aléatoire, ainsi que l'optimisation de chacun d'eux (temps estimé à 2-3h max)
 
--   le choix du meilleur classifieur pour classer automatiquement un échantillon de plancton et la justification de votre choix dans les conclusions (y compris la ou les métriques que vous avez utilisées et pourquoi) (30min max).
+-   le choix du meilleur classifieur pour classer automatiquement un échantillon de plancton et la justification de votre choix dans les conclusions (y compris la ou les métriques que vous avez utilisées et pourquoi) (30min - 1h finalisation du projet comprise).
 
 # Informations sur les données
 

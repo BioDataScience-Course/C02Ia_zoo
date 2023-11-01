@@ -109,6 +109,8 @@ Nous réalisons une ACP pour voir les corrélations entre attributs.
 
 <!--% Effectuez à présent une ACP pour voir comment les attributs se distribuent dans l'espace des variables. -->
 
+<!-- TODO: vérifier ceci : ne semble pas donner un test correct -->
+
 ```{r acp, record='ROP', object='zoo2_pca', arg='call,sdev'}
 SciViews::R("explore")
 zoo2_pca <- ___
@@ -148,9 +150,11 @@ select_answer(r"-{
 
 ## Phase d'apprentissage et optimisation des trois classifieurs
 
-<!--% Pour chacune des trois méthodes (k plus proche voisin, arbre de partitionnement et forêt aléatoire) entraînez un classifieur et optimisez-le en choisissant les meilleurs paramètres pour chacun d'eux (mesure des performances par validation croisée dix fois). Indiquez les différentes valeurs des paramètres testés mais ne conservez que le meilleur modèle (ne dupliquez pas les chunks !) -->
+<!--% Pour chacune des trois méthodes (k plus proche voisin, arbre de partitionnement et forêt aléatoire) entraînez un classifieur et optimisez le premier et le dernier en choisissant les meilleurs paramètres pour chacun d'eux (mesure des performances par validation croisée dix fois). Indiquez les différentes valeurs des paramètres testés mais ne conservez que le meilleur modèle (ne dupliquez pas les chunks !) -->
 
 ### K plus proches voisins
+
+<!--% Vous optimisez le paramètre k ici. Garder à l'esprit que les valeurs paires ne sont pas otimales et concentrez-vous sur les valeurs impaires. Il est très rare de monter à plus d'une ou deux dizaines de proches voisins. Regardez aussi le nombre de classes dans lesquelles le classifieur place des items : si ce nombre diminue, c'est mauvais signe ! -->
 
 ```{r knn, record='ROP', object='zoo2_knn', arg='k'}
 set.seed(16322)
@@ -176,6 +180,8 @@ ___
 ...explication de votre optimisation ici...
 
 ### Partitionnement récursif
+
+<!--% Le partitionnement récursif a plusieurs paramètres qu'il est possible d'optimiser. Cependant pour cet exercice, vous vous contentez de faire la version par défaut dans le but de la comparer aux deux autres classifieurs. -->
 
 ```{r rpart, record='ROP', object='zoo2_rpart', arg='control'}
 set.seed(235)
@@ -209,6 +215,8 @@ ___
 ...explication de votre optimisation ici...
 
 ### Forêt aléatoire
+
+<!--% Ici, vous optimiserez le nombre d'arbres `ntree =` en vous aidant du graphique. Ne cherchez pas forcément le résultat le plus élevé en allant grapiller des décimales, mais pensez aussi au temps de calcul que vous pouvez améliorer en réduisant le nombre d'arbres, si c'est possible. -->
 
 ```{r rforest, record='ROP', object='zoo2_rf', arg='ntree,mtry'}
 set.seed(94)
