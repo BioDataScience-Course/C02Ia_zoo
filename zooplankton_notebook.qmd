@@ -25,13 +25,13 @@ ___, lang = "fr")
 
 <!--% Lisez attentivement l'introduction et but, ainsi que le matériel et méthodes. Ces sections sont importantes pour bien comprendre le contexte du travail. Elles sont déjà rédigées pour vous donner une bonne idée de ce qui doit y figurer. Recherchez les publications citées et trouvez l'information manquante que vous compléterez (trois mots manquants marqués ___). -->
 
-@2020fullgrabe ont étudié le mésozooplancton en Corse. Pour dénombrer les groupes taxonomiques présents, ils ont numérisé du plancton échantillonné de 2004 à **`2016`** et ont utilisé l'analyse d'image pour détourer et ensuite mesurer les organismes planctoniques sur les images [@2004grosjean]. Des spécialistes du plancton ont enfin constitué un set regroupant ces attributs et une identification des organismes en 16 classes différentes.
+@2020fullgrabe ont étudié le mésozooplancton en Corse. Pour dénombrer les groupes taxonomiques présents, ils ont numérisé du plancton échantillonné de 2004 à **`___`** et ont utilisé l'analyse d'image pour détourer et ensuite mesurer les organismes planctoniques sur les images [@2004grosjean]. Des spécialistes du plancton ont enfin constitué un set regroupant ces attributs et une identification des organismes en 16 classes différentes.
 
 Notre but est de réaliser un classifieur capable d'identifier le zooplancton de Corse le plus versatile et efficace possible sur base de ces données.
 
 # Matériel et méthodes
 
-Le plancton a été récolté entre 2004 et 2016 dans la baie de `Calvi` par trait horizontal sous la surface à l'aide d'un filet à plancton de type WP2 de 200µm de maille et une ouverture de 60cm de diamètre. Le plancton a été immédiatement fixé au formaldéhyde tamponné à 4%. Les échantillons ont ensuite été numérisés à l'aide d'un scanner Epson `V750pro` et l'analyse d'image a été réalisée à l'aide du logiciel Zoo/PhytoImage. Plusieurs milliers d'individus ont ensuite été manuellement sur les images et classés en 16 catégories différentes pour établir les sets d'apprentissage et de test.
+Le plancton a été récolté entre 2004 et 2016 dans la baie de `___` par trait horizontal sous la surface à l'aide d'un filet à plancton de type WP2 de 200µm de maille et une ouverture de 60cm de diamètre. Le plancton a été immédiatement fixé au formaldéhyde tamponné à 4%. Les échantillons ont ensuite été numérisés à l'aide d'un scanner Epson `___` et l'analyse d'image a été réalisée à l'aide du logiciel Zoo/PhytoImage. Plusieurs milliers d'individus ont ensuite été manuellement sur les images et classés en 16 catégories différentes pour établir les sets d'apprentissage et de test.
 
 L'analyse est réalisée dans la SciViews Box 2024 dans [Saturn Cloud](https://saturncloud.io) (Linux) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {mlearning} version `r packageVersion("mlearning")` est utilisé pour entraîner et ensuite étudier les performances des différents classifieurs.
 
@@ -73,13 +73,13 @@ select_answer(r"-{
 
 Les techniques d'analyse d'image suggèrent différentes **variables calculées** (note : vous devez faire une étude attentive de la bibliographie pour cela en pratique). Nous ajoutons celles qui sont renseignées dans l'appendice 3 du mémoire de Thomas Quivy (voir biblio/quivy_master_thesis_appendix3.pdf) :
 
--   Elong = `Major` / Minor
+-   Elong = `___` / Minor
 
 -   CentBoxD = ((BX + Width/2 - X)^2^ + (BY + Height/2 - Y)^2^)^1/2^
 
 -   GrayCenBoxD = ((BX + Width/2 - XM)^2^ + (BY + Height/2 - YM)^2^)^1/2^
 
--   `CentroidsD` = ((X - XM)^2^ + (Y - YM)^2^)^1/2^
+-   `___` = ((X - XM)^2^ + (Y - YM)^2^)^1/2^
 
 -   Range = Max - Min
 
@@ -89,7 +89,7 @@ Les techniques d'analyse d'image suggèrent différentes **variables calculées*
 
 -   CV = StdDev / Mean \* 100
 
--   ECD = 2 \* (`Area` / $\Pi$)^1/2^ (déjà calculé)
+-   ECD = 2 \* (`___` / $\Pi$)^1/2^ (déjà calculé)
 
 <!--% Calculez maintenant ces attributs dérivés. Rappelez-vous que x^1/2 est la racine carrée de x et se note sqrt(x) dans R. -->
 
@@ -101,7 +101,7 @@ zoo <- ___
 
 Nous éliminons donc ces variables, ainsi que celles que nous avions déjà identifiées comme inutiles plus haut.
 
-<!--% Éliminez les variables inutiles ci-dessous et placez le résultat dans zoo2. Vérifiez attentivement s'il n'y a pas d'autre(s) variable(s) à éliner... Hint : oui, il y en a une ! -->
+<!--% Éliminez les variables inutiles ci-dessous et placez le résultat dans zoo2. Vérifiez attentivement s'il n'y a pas d'autre(s) variable(s) à éliminer... Hint : oui, il y en a une ! -->
 
 ```{r select, record='RODFS', object='zoo2'}
 zoo2 <- ___
