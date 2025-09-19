@@ -33,9 +33,11 @@ Notre but est de réaliser un classifieur capable d'identifier le zooplancton de
 
 Le plancton a été récolté entre 2004 et 2016 dans la baie de `___` par trait horizontal sous la surface à l'aide d'un filet à plancton de type WP2 de 200µm de maille et une ouverture de 60cm de diamètre. Le plancton a été immédiatement fixé au formaldéhyde tamponné à 4%. Les échantillons ont ensuite été numérisés à l'aide d'un scanner Epson `___` et l'analyse d'image a été réalisée à l'aide du logiciel Zoo/PhytoImage. Plusieurs milliers d'individus ont ensuite été manuellement sur les images et classés en 16 catégories différentes pour établir les sets d'apprentissage et de test.
 
-L'analyse est réalisée dans la SciViews Box 2024 dans [Saturn Cloud](https://saturncloud.io) (Linux) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {mlearning} version `r packageVersion("mlearning")` est utilisé pour entraîner et ensuite étudier les performances des différents classifieurs.
+L'analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io) (Linux) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {mlearning} version `r packageVersion("mlearning")` est utilisé pour entraîner et ensuite étudier les performances des différents classifieurs.
 
 # Résultats
+
+<!--% Importez le tableau zooplankton.rds se trouvant dans le dossier data/ et assignez le résultat à zoo. -->
 
 ```{r import, record='RODFS', object='zoo'}
 zoo <- ___
@@ -53,7 +55,7 @@ ___
 
 ```{r desccomment, output="asis"}
 select_answer(r"-{
-[] -   Le jeu de données contient 6933 observations et 40 variables dont trois sont qualitatives.
+[] -   Le jeu de données contient 6933 observations et 40 variables, dont trois sont qualitatives.
 [] -   Il n'y a aucune valeur manquante.
 [] -   Il y a des valeurs manquantes dans les variables qualitatives.
 [] -   Il y a des valeurs manquantes dans les variables quantitatives.
@@ -69,7 +71,7 @@ select_answer(r"-{
 
 ## Feature engineering
 
-<!--% Dans cette section, vous allez retravailler le tableau de manière à aboutir à un data frame qui ne contienne que la variable à prédire et vos attributs. Vous allez calculer des attributs dérivés potentiellement intéressants et vous allez aussi éliminer des variables inutiles pour la classification. Le document `biblio/quivy_master_thesis_appendix3.pdf` est un bon point de départ pour vous informer sur les attributs disponibles ou calculables. Complétez les zones manquantes marquées ___. -->
+<!--% Dans cette section, vous allez retravailler le tableau de manière à aboutir à un data frame qui ne contient que la variable à prédire et vos attributs. Vous allez calculer des attributs dérivés potentiellement intéressants et vous allez aussi éliminer des variables inutiles pour la classification. Le document `biblio/quivy_master_thesis_appendix3.pdf` est un bon point de départ pour vous informer sur les attributs disponibles ou calculables. Complétez les zones manquantes marquées ___. -->
 
 Les techniques d'analyse d'image suggèrent différentes **variables calculées** (note : vous devez faire une étude attentive de la bibliographie pour cela en pratique). Nous ajoutons celles qui sont renseignées dans l'appendice 3 du mémoire de Thomas Quivy (voir biblio/quivy_master_thesis_appendix3.pdf) :
 
@@ -101,7 +103,7 @@ zoo <- ___
 
 Nous éliminons donc ces variables, ainsi que celles que nous avions déjà identifiées comme inutiles plus haut.
 
-<!--% Éliminez les variables inutiles ci-dessous et placez le résultat dans zoo2. Vérifiez attentivement s'il n'y a pas d'autre(s) variable(s) à éliminer... Hint : oui, il y en a une ! -->
+<!--% Éliminez les variables inutiles ci-dessous et placez le résultat dans zoo2. Vérifiez attentivement s'il n'y a pas d'autre(s) variable(s) à éliminer... Hint : oui, il y en a une ! Cela donne un total de 19 variables à éliminer. -->
 
 ```{r select, record='RODFS', object='zoo2'}
 zoo2 <- ___
@@ -141,7 +143,7 @@ select_answer(r"-{
 [] -   Le premier plan de l'ACP représente environ 55% de la variance.
 [] -   Les attributs sont tous bien représentés dans le plan principal de l'ACP.
 
-[] -   Aucun attribut n'est bien représenté dans le premier plan de l'ACP. Nous n'avons aucunes corrélations entre les différentes variables.
+[] -   Aucun attribut n'est bien représenté dans le premier plan de l'ACP. Nous n'avons aucune corrélation entre les différentes variables.
 [] -   Aucun attribut n'est bien représenté dans le premier plan de l'ACP. Nous avons des corrélations fortes entre plusieurs variables.
 [] -   Les variables de taille (ECD…) et de forme (Solidity, Circularity…) sont corrélées avec le premier axe (mais faiblement).
 [] -   Les variables de transparence (Mean, StdDev, MeanPos…) sont faiblement corrélées avec le premier axe.
@@ -155,7 +157,7 @@ select_answer(r"-{
 
 ### K plus proches voisins
 
-<!--% Vous optimisez le paramètre k ici. Garder à l'esprit que les valeurs paires ne sont pas otimales et concentrez-vous sur les valeurs impaires. Il est très rare de monter à plus d'une ou deux dizaines de proches voisins. Regardez aussi le nombre de classes dans lesquelles le classifieur place des items : si ce nombre diminue, c'est mauvais signe ! -->
+<!--% Vous optimisez le paramètre k ici. Gardez à l'esprit que les valeurs paires ne sont pas optimales et concentrez-vous sur les valeurs impaires. Il est très rare de monter à plus d'une ou deux dizaines de proches voisins. Regardez aussi le nombre de classes dans lesquelles le classifieur place des items : si ce nombre diminue, c'est mauvais signe ! -->
 
 ```{r knn, record='ROP', object='zoo2_knn', arg='k'}
 set.seed(16322)
@@ -182,7 +184,7 @@ ___
 
 ### Partitionnement récursif
 
-<!--% Le partitionnement récursif a plusieurs paramètres qu'il est possible d'optimiser. Cependant pour cet exercice, vous vous contentez de faire la version par défaut dans le but de la comparer aux deux autres classifieurs. -->
+<!--% Le partitionnement récursif a plusieurs paramètres qu'il est possible d'optimiser. Cependant, pour cet exercice, vous vous contentez de faire la version par défaut dans le but de la comparer aux deux autres classifieurs. -->
 
 ```{r rpart, record='ROP', object='zoo2_rpart', arg='control'}
 set.seed(235)
@@ -211,13 +213,11 @@ plot(zoo2_rpart_conf)
 ___
 ```
 
-<!--% Indiquez ci-dessous les paramètres testés pour votre classifieur partitionnement récursif en 2 phrases max. -->
-
-...explication de votre optimisation ici...
+Le partitionnement récursif utilise de nombreux paramètres différents, mais les valeurs par défaut donnent déjà souvent un bon résultat. Nous n'avons pas cherché à optimiser le classifieur avec d'autres valeurs.
 
 ### Forêt aléatoire
 
-<!--% Ici, vous optimiserez le nombre d'arbres `ntree =` en vous aidant du graphique. Ne cherchez pas forcément le résultat le plus élevé en allant grapiller des décimales, mais pensez aussi au temps de calcul que vous pouvez améliorer en réduisant le nombre d'arbres, si c'est possible. -->
+<!--% Ici, vous optimiserez le nombre d'arbres `ntree =` en vous aidant du graphique. Ne cherchez pas forcément le résultat le plus élevé en allant grappiller des décimales, mais pensez aussi au temps de calcul que vous pouvez améliorer en réduisant le nombre d'arbres, si c'est possible. -->
 
 ```{r rforest, record='ROP', object='zoo2_rf', arg='ntree,mtry'}
 set.seed(94)

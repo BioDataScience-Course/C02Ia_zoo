@@ -114,7 +114,7 @@ test_that("Chunks 'desc' & 'desccomment' : description des données", {
 
   expect_true(is_identical_to_ref("desccomment"))
   # L'interprétation de la description des données est (partiellement) fausse
-  # Vous devez cochez les phrases qui décrivent le graphique d'un 'x' entre les
+  # Vous devez cocher les phrases qui décrivent le graphique d'un 'x' entre les
   # crochets [] -> [x]. Ensuite, vous devez recompiler la version HTML du
   # bloc-notes (bouton 'Rendu') sans erreur pour réactualiser les résultats.
   # Assurez-vous de bien comprendre ce qui est coché ou pas : vous n'aurez plus
@@ -186,7 +186,7 @@ test_that("Chunks 'acp', 'acpcomment' : ACP première partie", {
   # Normalement, on regarde si les premières variables capturent ou non une part
   # importante de la variance totale. Ceci indique si la représentation des
   # variables et des individus sera plus ou moins fidèle aux données ensuite.
-  # Vous devez cochez les phrases qui décrivent le graphique d'un 'x' entre les
+  # Vous devez cocher les phrases qui décrivent le graphique d'un 'x' entre les
   # crochets [] -> [x]. Ensuite, vous devez recompiler la version HTML du
   # bloc-notes (bouton 'Rendu') sans erreur pour réactualiser les résultats.
   # Assurez-vous de bien comprendre ce qui est coché ou pas : vous n'aurez plus
@@ -206,10 +206,10 @@ test_that("Chunks 'acpvars', 'acpvarscomment' : ACP seconde partie", {
   expect_true(is_identical_to_ref("acpvarscomment"))
   # L'interprétation du graphique de l'ACP dans l'espace des variables est
   # (partiellement) fausse
-  # Ce graphique n'est pas facile à lire parce que les vecterurs sont petits,
+  # Ce graphique n'est pas facile à lire parce que les vecteurs sont petits,
   # nombreux et superposés. Il y a quand même moyen de voir des tendances se
   # dessiner. À partir de là, quelques phrases font sens dans les choix offerts.
-  # Vous devez cochez les phrases qui décrivent le graphique d'un 'x' entre les
+  # Vous devez cocher les phrases qui décrivent le graphique d'un 'x' entre les
   # crochets [] -> [x]. Ensuite, vous devez recompiler la version HTML du
   # bloc-notes (bouton 'Rendu') sans erreur pour réactualiser les résultats.
   # Assurez-vous de bien comprendre ce qui est coché ou pas : vous n'aurez plus
@@ -255,7 +255,7 @@ test_that("Chunks 'rpart', `rpart_confusion' & 'rpart_metrics' : partitionnement
   # produire, il n'y a pas qu'une seule "vérité" absolue ici). Si vous êtes
   # confiant•e dans votre travail, alors gardez le classifieur que vous avez
   # réalisé. Sinon, discutez-en avec vos enseignants pour vous assurer d'être
-  # dans le bon. Cet algorithme admets beaucoup de paramètres différents, mais
+  # dans le bon. Cet algorithme admet beaucoup de paramètres différents, mais
   # nous n'avons rien détaillé dans le cours. Ne passez pas trop de temps à
   # essayer d'optimiser ce classifieur-ci et passez rapidement au suivant (mais
   # vous pouvez quand même tester quelque chose en vous basant sur

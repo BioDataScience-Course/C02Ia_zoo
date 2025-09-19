@@ -1,6 +1,6 @@
 # Classification supervisée d'organismes zooplanctoniques
 
-Ce projet nécessite d'avoir assimilé l'ensemble des notions des premier et second modules du cours de science des données biologiques 3. Il correspond au dépôt GitHub <https://github.com/BioDataScience-Course/C02Ia_zoo>.
+Ce projet nécessite d'avoir assimilé l'ensemble des notions des deux premiers modules du cours de science des données biologiques 3. Il correspond au dépôt GitHub <https://github.com/BioDataScience-Course/C02Ia_zoo>.
 
 
 ## Objectifs
