@@ -24,6 +24,9 @@ Trois étapes sont importantes ici :
 
 -   le choix du meilleur classifieur pour classer automatiquement un échantillon de plancton et la justification de votre choix dans les conclusions (y compris la ou les métriques que vous avez utilisées et pourquoi)
 
+## Utilisation de l'IA générative
+
+Dans le cadre de votre travail, vous avez le droit d'être aidé par l'intelligence artificielle. Le chatbot SciViews est disponible dans votre RStudio Saturn Cloud via l'addin (extension) "Help". Il répond aux questions concernant le langage R, les statistiques et la science des données. **Vous devez indiquer clairement dans votre travail comment vous avez utilisé l'IA générative, laquelle et pour quoi faire (aide bibliographique, aide au codage en R, aide à la rédaction...)**
 
 ## Informations sur les données
 

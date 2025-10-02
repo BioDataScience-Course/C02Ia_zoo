@@ -17,6 +17,9 @@ bibliography: "biblio/references.bib"
 if (!"tools:tests" %in% search())
   source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
 
+# Configuration Knitr pour utiliser AGG comme moteur graphique
+knitr::opts_chunk$set(dev = "ragg_png")
+
 # Configure SciViews::R environment
 ___, lang = "fr")
 ```
@@ -259,3 +262,4 @@ ___
 ...votre discussion ici...
 
 # Bibliographie
+
