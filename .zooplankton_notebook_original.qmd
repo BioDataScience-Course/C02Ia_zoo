@@ -9,6 +9,8 @@ format:
     toc: true
 editor: visual
 lang: fr
+svbox: 2026
+vm: "Ubuntu 24.04.3 LTS"
 bibliography: "biblio/references.bib"
 ---
 
@@ -21,7 +23,10 @@ if (!"tools:tests" %in% search())
 knitr::opts_chunk$set(dev = "ragg_png")
 
 # Configure SciViews::R environment
-___, lang = "fr")
+___
+
+# Function supplémentaire
+source("R/functions.R")
 ```
 
 # Introduction et but
@@ -36,7 +41,21 @@ Notre but est de réaliser un classifieur capable d'identifier le zooplancton de
 
 Le plancton a été récolté entre 2004 et 2016 dans la baie de `___` par trait horizontal sous la surface à l'aide d'un filet à plancton de type WP2 de 200µm de maille et une ouverture de 60cm de diamètre. Le plancton a été immédiatement fixé au formaldéhyde tamponné à 4%. Les échantillons ont ensuite été numérisés à l'aide d'un scanner Epson `___` et l'analyse d'image a été réalisée à l'aide du logiciel Zoo/PhytoImage. Plusieurs milliers d'individus ont ensuite été manuellement sur les images et classés en 16 catégories différentes pour établir les sets d'apprentissage et de test.
 
-L'analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io) (Linux) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {mlearning} version `r packageVersion("mlearning")` est utilisé pour entraîner et ensuite étudier les performances des différents classifieurs.
+L'analyse est réalisée dans la  [SciViews Box `r rmarkdown::metadata$svbox`](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io) (`r rmarkdown::metadata$vm`) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {mlearning} version `r packageVersion("mlearning")` est utilisé pour entraîner et ensuite étudier les performances des différents classifieurs.
+
+## Déclaration sur l'utilisation de l'IA
+
+<!--% Spécifiez si vous avez employé l'intelligence artificielle dans votre projet. -->
+
+```{r ai_comment, output='asis'}
+select_answer(r"-{
+[] -   Ce document a été rédigé en étant assisté par l'Intelligence Artificielle.
+[] -   Ce document a été rédigé sans recours à l'Intelligence Artificielle.}-")
+```
+
+<!-- Précisez ci-dessous l'utilisation que vous avez faite de l'IA. Citez le modèle utilisé. -->
+
+
 
 # Résultats
 
@@ -78,28 +97,36 @@ select_answer(r"-{
 
 Les techniques d'analyse d'image suggèrent différentes **variables calculées** (note : vous devez faire une étude attentive de la bibliographie pour cela en pratique). Nous ajoutons celles qui sont renseignées dans l'appendice 3 du mémoire de Thomas Quivy (voir biblio/quivy_master_thesis_appendix3.pdf) :
 
--   Elong = `___` / Minor
+- Elong = `___` / Minor
 
--   CentBoxD = ((BX + Width/2 - X)^2^ + (BY + Height/2 - Y)^2^)^1/2^
+- CentBoxD = ((BX + Width/2 - X)^2^ + (BY + Height/2 - Y)^2^)^1/2^
 
--   GrayCenBoxD = ((BX + Width/2 - XM)^2^ + (BY + Height/2 - YM)^2^)^1/2^
+- GrayCenBoxD = ((BX + Width/2 - XM)^2^ + (BY + Height/2 - YM)^2^)^1/2^
 
--   `___` = ((X - XM)^2^ + (Y - YM)^2^)^1/2^
+- `___` = ((X - XM)^2^ + (Y - YM)^2^)^1/2^
 
--   Range = Max - Min
+- Range = Max - Min
 
--   MeanPos = (Max - Mean) / Range
+- MeanPos = (Max - Mean) / Range
 
--   SDNorm = StdDev / Range
+- SDNorm = StdDev / Range
 
--   CV = StdDev / Mean \* 100
+- CV = StdDev / Mean \* 100
 
--   ECD = 2 \* (`___` / $\Pi$)^1/2^ (déjà calculé)
+- ECD = 2 \* (`Area` / $\Pi$)^1/2^ (déjà calculé)
 
 <!--% Calculez maintenant ces attributs dérivés. Rappelez-vous que x^1/2 est la racine carrée de x et se note sqrt(x) dans R. -->
 
 ```{r attrib, record='RODFS', object='zoo'}
-zoo <- ___ 
+zoo <- smutate(zoo,
+  Elong = ___,
+  CentBoxD = ___,
+  GrayCenBoxD = ___, 
+  CentroidsD = ___,
+  Range = ___,
+  MeanPos = ___,
+  SDNorm = ___,
+  CV = ___) 
 ```
 
 À l'examen de la signification des différentes variables quantitatives, il apparaît que `X`, `Y`, `XM`, `YM`, `Width`, `Height`, `BX`, `BY`, `XStart` et `YStart` sont des variables qui identifient des pixels sur l'image et ne sont pas des mesures morphométriques ou de transparence utiles ici. Elles ne nous sont plus utiles une fois nos variables calculées. De plus `Angle`, `FeretX`, `FeretY` et `FeretAngle` sont des variables qui identifient la position et l'orientation des individus dans l'image, et ceci ne porte pas non plus d'information utile pour leur identification (disposition au hasard du plancton dans les images).
@@ -108,7 +135,21 @@ Nous éliminons donc ces variables, ainsi que celles que nous avions déjà iden
 
 <!--% Éliminez les variables inutiles ci-dessous et placez le résultat dans zoo2. Vérifiez attentivement s'il n'y a pas d'autre(s) variable(s) à éliminer... Hint : oui, il y en a une ! Cela donne un total de 19 variables à éliminer. -->
 
-```{r select, record='RODFS', object='zoo2'}
+<!--# En pratique, il n'est pas utile d'avoir trois chunks successifs. Afin de cadrer l'exercice, chaque étape est vérifiée.-->
+
+```{r select01, record='RODFS', object='zoo2'}
+# Elimination des variables de lié à l'echantillon (voir descomment) (4)
+zoo2 <-___
+```
+
+```{r select02, record='RODFS', object='zoo2'}
+# Elimination des variables quantitatives (citées ci-dessus) (14)
+zoo2 <- ___
+```
+
+```{r select03, record='RODFS', object='zoo2'}
+# Elimination de variables redondantes détecté via la matrice de correlation (2)
+correlation(sselect(zoo2, -Class)) |> correlation_best()
 zoo2 <- ___
 ```
 
@@ -116,10 +157,10 @@ Nous réalisons une ACP pour voir les corrélations entre attributs.
 
 <!--% Effectuez à présent une ACP pour voir comment les attributs se distribuent dans l'espace des variables. -->
 
-```{r acp, record='ROP', object='zoo2_pca', arg='call'}
+```{r acp, record='ROP', object='zoo2_pca', arg='sdev,totdev', fun=object_part_round}
 SciViews::R("explore")
-zoo2_pca <- ___
-chart$___
+zoo2_pca <- pca(___, scale = TRUE)
+chart$scree(zoo2_pca)
 ```
 
 <!--% interprétation… -->
@@ -136,7 +177,7 @@ select_answer(r"-{
 <!--% Visualisez les attributs dans l'espace des variables dans le premier plan principal de l'ACP -->
 
 ```{r acpvars, record='RNP', arg='labels'}
-chart$___
+chart$loadings(___, choices = c(1, 2))
 ```
 
 <!--% Interprétez ce graphique -->
@@ -156,13 +197,13 @@ select_answer(r"-{
 
 ## Phase d'apprentissage et optimisation des trois classifieurs
 
-<!--% Pour chacune des trois méthodes (k plus proche voisin, arbre de partitionnement et forêt aléatoire) entraînez un classifieur et optimisez le premier et le dernier en choisissant les meilleurs paramètres pour chacun d'eux (mesure des performances par validation croisée dix fois). Indiquez les différentes valeurs des paramètres testés mais ne conservez que le meilleur modèle (ne dupliquez pas les chunks !) -->
+<!--% Pour chacune des trois méthodes (k plus proche voisin, arbre de partitionnement et forêt aléatoire) entraînez un classifieur et optimisez le premier et le dernier en choisissant les meilleurs paramètres pour chacun d'eux (mesure des performances par validation croisée dix fois). Indiquez les différentes valeurs des paramètres testés, mais ne conservez que le meilleur modèle (ne dupliquez pas les chunks !) -->
 
 ### K plus proches voisins
 
-<!--% Vous optimisez le paramètre k ici. Gardez à l'esprit que les valeurs paires ne sont pas optimales et concentrez-vous sur les valeurs impaires. Il est très rare de monter à plus d'une ou deux dizaines de proches voisins. Regardez aussi le nombre de classes dans lesquelles le classifieur place des items : si ce nombre diminue, c'est mauvais signe ! -->
+<!--% Vous optimisez le paramètre k ici. Gardez à l'esprit que les valeurs paires ne sont pas opimales et concentrez-vous sur les valeurs impaires. Il est très rare de monter à plus d'une ou deux dizaines de proches voisins. Regardez aussi le nombre de classes dans lesquelles le classifieur place des items : si ce nombre diminue, c'est mauvais signe ! -->
 
-```{r knn, record='ROP', object='zoo2_knn', arg='k'}
+```{r knn, record='ROP', object='zoo2_knn', arg='k', warning=FALSE}
 set.seed(16322)
 zoo2_knn <- ___
 ```
@@ -178,12 +219,31 @@ plot(zoo2_knn_conf)
 <!--% Calculez les métriques globales, ainsi que le score F, le rappel et la précision par classe à partir de la matrice de confusion (pas toutes les métriques !) -->
 
 ```{r knn_metrics, record='RNA', arg='names,class'}
-___
+summary(___, type = c("Fscore", "Recall", "Precision"))
 ```
 
-<!--% Indiquez ci-dessous les paramètres testés pour votre classifieur k plus proches voisins en 2 phrases max. -->
+<!--% Indiquez les paramètres testés pour votre classifieur k plus proches voisins en sélectionnant les phrases correctes ci-dessous. -->
 
-...explication de votre optimisation ici...
+```{r knncomment, output='asis'}
+select_answer(r"-{
+[] -   Nous avons gardé la valeur par défaut de *k* sans tester d'autres valeurs.
+[] -   Nous avons testé différentes valeurs de *k* (nombre de plus proches voisins) : 3, 5, 7, 9, 11 et 13.
+[] -   Nous avons testé des valeurs paires et impaires de *k* de 1 à 20.
+
+[] -   Nous avons retenu *k* = 3 car c'est la valeur qui donne les meilleures performances.
+[] -   Nous avons retenu *k* = 13 car plus *k* est grand, meilleur est le classifieur.
+[] -   Nous avons retenu *k* = 9.
+
+[] -   *k* = 9 a été choisi car les performances diminuent fortement à partir de cette valeur.
+[] -   *k* = 9 est un bon compromis car les performances plafonnent à partir de cette valeur.
+[] -   *k* = 9 a été choisi uniquement parce que c'est la valeur par défaut de la fonction `ml_knn()`.
+
+[] -   Une valeur de *k* supérieure ou égale à 15 améliore la reconnaissance des classes rares dans le set de test.
+[] -   Une valeur de *k* supérieure ou égale à 15 augmente le nombre de classes non reconnues dans le set de test.
+[] -   Le nombre de classes reconnues dans le set de test n'est pas affecté par la valeur de *k*.}-")
+
+```
+
 
 ### Partitionnement récursif
 
@@ -198,8 +258,8 @@ zoo2_rpart <- ___
 
 ```{r rpart_plot}
 set.seed(63)
-plot(___)
-text(___)
+plot(zoo2_rpart, margin = 0.03, uniform = TRUE)
+text(zoo2_rpart, use.n = FALSE)
 ```
 
 <!--% matrice de confusion par validation croisée dix fois et graphique -->
@@ -213,7 +273,7 @@ plot(zoo2_rpart_conf)
 <!--% Calculez les métriques globales, ainsi que le score F, le rappel et la précision par classe à partir de la matrice de confusion (pas toutes les métriques !) -->
 
 ```{r rpart_metrics, record='RNA', arg='names,class'}
-___
+
 ```
 
 Le partitionnement récursif utilise de nombreux paramètres différents, mais les valeurs par défaut donnent déjà souvent un bon résultat. Nous n'avons pas cherché à optimiser le classifieur avec d'autres valeurs.
@@ -230,7 +290,7 @@ zoo2_rf <- ___
 <!--% Graphique de l'erreur en fonction du nombre d'arbres -->
 
 ```{r rf_plot}
-___
+plot(zoo2_rf)
 ```
 
 <!--% matrice de confusion par validation croisée dix fois et graphique -->
@@ -247,19 +307,71 @@ plot(zoo2_rf_conf)
 ___
 ```
 
-<!--% Indiquez ci-dessous les paramètres testés pour votre forêt aléatoire en 2 phrases max. -->
+<!--% Indiquez les paramètres testés pour votre forêt aléatoire en sélectionnant les phrases correctes ci-dessous. -->
 
-...explication de votre optimisation ici...
+```{r rfcomment}
+select_answer(r"-{
+[] -   Nous avons optimisé le paramètre `mtry` en testant plusieurs valeurs.
+[] -   Nous n'avons pas modifié `mtry`, dont la valeur par défaut est souvent proche de l'optimal.
+[] -   Nous avons augmenté `mtry` pour gagner en performance.
 
-<!--% Justification de la ou des métriques de performance prises en compte et critère de choix du classifieur optimal parmi les trois ci-dessous en 2 phrases max. -->
+[] -   Nous avons conservé la valeur par défaut de `ntree` (500 arbres).
+[] -   Nous avons augmenté `ntree` à plus de 500 arbres pour améliorer les performances.
+[] -   Nous avons réduit `ntree` à 50 arbres.
 
-...choix des métriques ici...
+[] -   Nous avons réduit `ntree` car l'erreur augmente fortement quand on ajoute des arbres.
+[] -   Nous avons réduit `ntree` à 50 car le graphique de l'erreur montre peu de gain au-delà de cette valeur.
+[] -   Nous avons choisi `ntree = 50` uniquement pour obtenir le meilleur score possible, quel que soit le temps de calcul.}-")
+```
+
+
+<!--% Justifiez la ou les métriques de performance prises en compte et le critère de choix du classifieur optimal parmi les trois en sélectionnant les phrases correctes ci-dessous. -->
+
+```{r metricscomment, output="asis"}
+select_answer(r"-{
+[] -   Les classes sont à peu près équilibrées, ce qui permet d'utiliser simplement l'exactitude (accuracy) globale comme métrique de référence.
+[] -   Il y a de fortes disparités entre les classes (certaines sont très abondantes, d'autres très rares). L'exactitude globale ne serait donc pas représentative des performances sur l'ensemble des classes.
+[] -   Les disparités entre classes sont sans importance pour le choix de la métrique de performance.
+
+[] -   Nous voulons un classifieur spécialisé dans l'identification d'une classe en particulier, la plus abondante.
+[] -   Nous voulons un classifieur qui fasse le meilleur travail possible de manière générale, sans se focaliser sur une classe en particulier.
+
+[] -   Nous privilégions le rappel, afin de ne manquer aucun individu d'une classe.
+[] -   Nous privilégions la précision, afin d'éviter les faux positifs dans chaque classe.
+[] -   Nous ne privilégions ni le rappel ni la précision : le score F, qui combine les deux, est donc adapté.
+
+[] -   Nous retenons uniquement le score F de la classe la moins bien identifiée (Pisces larvae) comme métrique de référence.
+[] -   Nous retenons uniquement le score macro-F, qui est suffisant pour comparer les classifieurs.
+[] -   Nous utilisons les scores macro-F et micro-F comme métriques de référence pour choisir le classifieur.}-")
+```
+
 
 # Discussion et conclusion
 
-<!--% Indiquez ci-dessous en 4 à 6 phrases maximum quel classifieur vous considérez comme le meilleur et s'il vous parait adéquat ici pour un déploiement (allez dans le détail pour les classes éventuellement problématiques). -->
+<!--% Indiquez quel classifieur vous considérez comme le meilleur et s'il vous paraît adéquat ici pour un déploiement (détaillez les classes problématiques) en sélectionnant les phrases correctes ci-dessous. -->
 
-...votre discussion ici...
+```{r conclusionscomment, output='asis'}
+select_answer(r"-{
+[] -   Le meilleur classifieur est le k plus proches voisins, avec un score F macro de 0.906 et un score F micro de 0.907.
+[] -   Le meilleur classifieur est le partitionnement récursif, avec un score F macro de 0.906 et un score F micro de 0.907.
+[] -   Le meilleur classifieur est la forêt aléatoire, avec un score F macro de 0.906 et un score F micro de 0.907.
+
+[] -   Le partitionnement récursif est presque aussi performant que la forêt aléatoire (score F macro proche de 0.9).
+[] -   Le partitionnement récursif arrive en second, mais avec un score F macro de seulement 0.544, bien inférieur à celui de la forêt aléatoire.
+[] -   Le k plus proches voisins ne donne pas de résultat satisfaisant avec ce jeu de données.
+
+[] -   La forêt aléatoire est l'algorithme le plus rapide des trois, même avec 50 arbres.
+[] -   Nous avons réduit le nombre d'arbres à 50 pour accélérer le calcul, mais la forêt aléatoire reste malgré tout l'algorithme le plus lent des trois.
+
+[] -   La classe la moins bien identifiée est Gymnoplea, avec un score F inférieur à 80%.
+[] -   La classe la moins bien identifiée est Pisces larvae, avec un score F inférieur à 80%.
+[] -   Toutes les autres classes ont un score F supérieur à 80%.
+
+[] -   Parmi les classes abondantes, l'essentiel de l'erreur provient de Pisces larvae.
+[] -   Parmi les classes abondantes, l'essentiel de l'erreur provient de Gymnoplea.
+[] -   Gymnoplea est essentiellement confondue avec Pisces larvae.
+[] -   Gymnoplea est essentiellement confondue avec Megalopa-Krill-Zoea et aussi avec Cyclopoida.}-")
+```
+
 
 # Bibliographie
-

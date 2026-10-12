@@ -1,6 +1,6 @@
 # Vérifications de zooplankton_notebook.qmd
-zoo <- parse_rmd("../../zooplankton_notebook.qmd",
-  allow_incomplete = TRUE, parse_yaml = TRUE)
+zoo <- try(parsermd::parse_qmd("../../zooplankton_notebook.qmd"))
+expect_true(TRUE, info = zoo)
 
 test_that("Le bloc-notes est-il compilé en un fichier final HTML ?", {
   expect_true(is_rendered("zooplankton_notebook.qmd"))
@@ -21,7 +21,7 @@ test_that("Le bloc-notes est-il compilé en un fichier final HTML ?", {
 })
 
 test_that("La structure du document est-elle conservée ?", {
-  expect_true(all(c("Introduction et but", "Matériel et méthodes",
+  expect_true(all(c("Introduction et but", "Matériel et méthodes", "Déclaration sur l'utilisation de l'IA",
     "Résultats", "Feature engineering",
     "Phase d'apprentissage et optimisation des trois classifieurs",
     "K plus proches voisins", "Partitionnement récursif", "Forêt aléatoire",
@@ -34,11 +34,7 @@ test_that("La structure du document est-elle conservée ?", {
   # d'origine dans le dépôt "template" du document (lien au début du fichier
   # README.md).
 
-  expect_true(all(c("setup", "import", "desc", "desccomment", "attrib",
-    "select", "acp", "acpcomment", "acpvars", "acpvarscomment",
-    "knn", "knn_confusion", "knn_metrics",
-    "rpart", "rpart_plot", "rpart_confusion", "rpart_metrics",
-    "rforest", "rf_plot", "rf_confusion", "rf_metrics")
+  expect_true(all(c("setup", "ai_comment", "import", "desc", "desccomment", "attrib", "select01", "select02", "select03", "acp", "acpcomment", "acpvars", "acpvarscomment", "knn", "knn_confusion", "knn_metrics", "knncomment", "rpart", "rpart_plot", "rpart_confusion", "rpart_metrics", "rforest", "rf_plot", "rf_confusion", "rf_metrics", "rfcomment", "metricscomment", "conclusionscomment")
     %in% rmd_node_label(zoo)))
   # Un ou plusieurs labels de chunks nécessaires à l'évaluation manquent
   # Ce test échoue si vous avez modifié la structure du document, un ou
@@ -56,20 +52,21 @@ test_that("La structure du document est-elle conservée ?", {
 })
 
 test_that("L'entête YAML a-t-il été complété ?", {
-  expect_true(zoo[[1]]$author != "___")
-  expect_true(!grepl("__", zoo[[1]]$author))
-  expect_true(grepl("^[^_]....+", zoo[[1]]$author))
+  authors <- zoo[[1]]@yaml[["author"]]
+  expect_true(authors != "___")
+  expect_true(!grepl("__", authors))
+  expect_true(grepl("^[^_]....+", authors))
   # Le nom d'auteur n'est pas complété ou de manière incorrecte dans l'entête
   # Vous devez indiquer votre nom dans l'entête YAML à la place de "___" et
   # éliminer les caractères '_' par la même occasion.
 
-  expect_true(grepl("[a-z]", zoo[[1]]$author))
+  expect_true(grepl("[a-z]", authors))
   # Aucune lettre minuscule n'est trouvée dans le nom d'auteur
   # Avez-vous bien complété le champ 'author' dans l'entête YAML ?
   # Vous ne pouvez pas écrire votre nom tout en majuscules. Utilisez une
   # majuscule en début de nom et de prénom, et des minuscules ensuite.
 
-  expect_true(grepl("[A-Z]", zoo[[1]]$author))
+  expect_true(grepl("[A-Z]", authors))
   # Aucune lettre majuscule n'est trouvée dans le nom d'auteur
   # Avez-vous bien complété le champ 'author' dans l'entête YAML ?
   # Vous ne pouvez pas écrire votre nom tout en minuscules. Utilisez une
@@ -153,19 +150,83 @@ test_that("Chunks 'attrib' et 'select' : la feature engineering est-elle correct
   # rentrées dans le chunk `attrib` et refaites un rendu du document pour
   # corriger le problème.
   
-  expect_true(is_identical_to_ref("select", "names"))
+  expect_true(is_identical_to_ref("select01", "names"))
   # Les colonnes dans le tableau `zoo2` avec variables sélectionnées ne sont pas
   # celles attendues
   # Vérifiez votre instruction dans le chunk 'select', ainsi que la liste des
-  # variables à éliminer ou à conserver. Vous devriez obtenir 29 variables au
+  # variables à éliminer ou à conserver. Vous devriez obtenir 44 variables au
   # final dans le jeu de données.
   
-  expect_true(is_identical_to_ref("select", "classes"))
+  expect_true(is_identical_to_ref("select01", "classes"))
+  # La nature des variables (classe) dans le tableau `zoo2` final est incorrecte
+  # Vérifiez le chunk `select` de création de variables calculées. Il doit y
+  # avoir une erreur dans votre code à ce niveau-là
+   
+  expect_true(is_identical_to_ref("select01", "ncol"))
+  # Le nombre de colonnes dans le tableau `zoo2` est incorrect après remaniement
+  # des données
+  # Si les tests précédents ont réussi, vérifiez les instructions que vous avez
+  # rentrées dans le chunk `select`. Vous devez sélectionner les variables
+  # (colonnes) à conserver, mais sans altérer le nombre d'items (lignes) du
+  #tableau. Refaites un rendu du document une fois l'erreur corrigée.
+  
+  expect_true(is_identical_to_ref("select01", "nrow"))
+  # Le nombre de lignes dans le tableau `zoo2` est incorrect après remaniement
+  # des données
+  # Si les tests précédents ont réussi, vérifiez les instructions que vous avez
+  # rentrées dans le chunk `select`. Vous devez sélectionner les variables
+  # (colonnes) à conserver, mais sans altérer le nombre d'items (lignes) du
+  #tableau. Refaites un rendu du document une fois l'erreur corrigée.
+  
+  expect_true(is_identical_to_ref("select02", "names"))
+  # Les colonnes dans le tableau `zoo2` avec variables sélectionnées ne sont pas
+  # celles attendues
+  # Vérifiez votre instruction dans le chunk 'select', ainsi que la liste des
+  # variables à éliminer ou à conserver. Vous devriez obtenir 30 variables au
+  # final dans le jeu de données.
+  
+  expect_true(is_identical_to_ref("select02", "classes"))
   # La nature des variables (classe) dans le tableau `zoo2` final est incorrecte
   # Vérifiez le chunk `select` de création de variables calculées. Il doit y
   # avoir une erreur dans votre code à ce niveau-là
   
-  expect_true(is_identical_to_ref("select", "nrow"))
+  expect_true(is_identical_to_ref("select02", "ncol"))
+  # Le nombre de colonnes dans le tableau `zoo2` est incorrect après remaniement
+  # des données
+  # Si les tests précédents ont réussi, vérifiez les instructions que vous avez
+  # rentrées dans le chunk `select`. Vous devez sélectionner les variables
+  # (colonnes) à conserver, mais sans altérer le nombre d'items (lignes) du
+  #tableau. Refaites un rendu du document une fois l'erreur corrigée.
+  
+  expect_true(is_identical_to_ref("select02", "nrow"))
+  # Le nombre de lignes dans le tableau `zoo2` est incorrect après remaniement
+  # des données
+  # Si les tests précédents ont réussi, vérifiez les instructions que vous avez
+  # rentrées dans le chunk `select`. Vous devez sélectionner les variables
+  # (colonnes) à conserver, mais sans altérer le nombre d'items (lignes) du
+  #tableau. Refaites un rendu du document une fois l'erreur corrigée.
+  
+  expect_true(is_identical_to_ref("select03", "names"))
+  # Les colonnes dans le tableau `zoo2` avec variables sélectionnées ne sont pas
+  # celles attendues
+  # Vérifiez votre instruction dans le chunk 'select', ainsi que la liste des
+  # variables à éliminer ou à conserver. Vous devriez obtenir 28 variables au
+  # final dans le jeu de données.
+  
+  expect_true(is_identical_to_ref("select03", "classes"))
+  # La nature des variables (classe) dans le tableau `zoo2` final est incorrecte
+  # Vérifiez le chunk `select` de création de variables calculées. Il doit y
+  # avoir une erreur dans votre code à ce niveau-là
+  
+  expect_true(is_identical_to_ref("select03", "ncol"))
+  # Le nombre de colonnes dans le tableau `zoo2` est incorrect après remaniement
+  # des données
+  # Si les tests précédents ont réussi, vérifiez les instructions que vous avez
+  # rentrées dans le chunk `select`. Vous devez sélectionner les variables
+  # (colonnes) à conserver, mais sans altérer le nombre d'items (lignes) du
+  #tableau. Refaites un rendu du document une fois l'erreur corrigée.
+  
+  expect_true(is_identical_to_ref("select03", "nrow"))
   # Le nombre de lignes dans le tableau `zoo2` est incorrect après remaniement
   # des données
   # Si les tests précédents ont réussi, vérifiez les instructions que vous avez
@@ -216,7 +277,7 @@ test_that("Chunks 'acpvars', 'acpvarscomment' : ACP seconde partie", {
   # cette aide plus tard dans le travail de groupe ou les interrogations !
 })
 
-test_that("Chunks 'knn', `knn_confusion' & 'knn_metrics' : k plus proches voisins", {
+test_that("Chunks 'knn', `knn_confusion', 'knn_metrics' ''knncomment : k plus proches voisins", {
   expect_true(is_identical_to_ref("knn"))
   # Le classifieur k plus proches voisins n'est pas réalisé ou est différent de 
   # celui considéré comme optimal par vos enseignants (cela peut se produire, il
@@ -239,13 +300,14 @@ test_that("Chunks 'knn', `knn_confusion' & 'knn_metrics' : k plus proches voisin
   # Si ce n'est pas le cas, relisez bien les consignes et corrigez votre code
   # avant de refaire un rendu du document Quarto pour revérifier.
   
-  expect_true(!(rmd_select(zoo, by_section("K plus proches voisins")) |>
-    as_document() |> grepl("...explication de votre optimisation ici...",
-      x = _, fixed = TRUE) |> any()))
-  # L'explication sur l'optimisation du classifieur k plus proches voisins
-  # n'est pas faite
-  # Remplacez "...explication de votre optimisation ici..." par vos phrases de
-  # commentaires libres.
+  expect_true(is_identical_to_ref("knncomment"))
+  # L'interprétation du classifieur K plus proches voisins est (partiellement)
+  # fausse.
+  # Vous devez cocher les phrases qui décrivent le graphique d'un 'x' entre les
+  # crochets [] -> [x]. Ensuite, vous devez recompiler la version HTML du
+  # bloc-notes (bouton 'Rendu') sans erreur pour réactualiser les résultats.
+  # Assurez-vous de bien comprendre ce qui est coché ou pas : vous n'aurez plus
+  # cette aide plus tard dans le travail de groupe ou les interrogations !
 })
 
 test_that("Chunks 'rpart', `rpart_confusion' & 'rpart_metrics' : partitionnement récursif", {
@@ -276,13 +338,6 @@ test_that("Chunks 'rpart', `rpart_confusion' & 'rpart_metrics' : partitionnement
   # Si ce n'est pas le cas, relisez bien les consignes et corrigez votre code
   # avant de refaire un rendu du document Quarto pour revérifier.
   
-  expect_true(!(rmd_select(zoo, by_section("Partitionnement récursif")) |>
-    as_document() |> grepl("...explication de votre optimisation ici...",
-      x = _, fixed = TRUE) |> any()))
-  # L'explication sur l'optimisation du classifieur par partitionnement récursif
-  # n'est pas faite
-  # Remplacez "...explication de votre optimisation ici..." par vos phrases de
-  # commentaires libres.
 })
 
 test_that("Chunks 'rforest', `rf_confusion' & 'rf_metrics' : forêt aléatoire", {
@@ -310,29 +365,30 @@ test_that("Chunks 'rforest', `rf_confusion' & 'rf_metrics' : forêt aléatoire",
   # Si ce n'est pas le cas, relisez bien les consignes et corrigez votre code
   # avant de refaire un rendu du document Quarto pour revérifier.
   
-  expect_true(!(rmd_select(zoo, by_section("Forêt aléatoire")) |>
-      as_document() |> grepl("...explication de votre optimisation ici...",
-        x = _, fixed = TRUE) |> any()))
-  # L'explication sur l'optimisation du classifieur forêt aléatoire
-  # n'est pas faite
-  # Remplacez "...explication de votre optimisation ici..." par vos phrases de
-  # commentaires libres.
+  expect_true(is_identical_to_ref("rfcomment"))
+  # L'interprétation du classifieur forêt aléatoire est (partiellement)
+  # fausse.
+  # Vous devez cocher les phrases qui décrivent le graphique d'un 'x' entre les
+  # crochets [] -> [x]. Ensuite, vous devez recompiler la version HTML du
+  # bloc-notes (bouton 'Rendu') sans erreur pour réactualiser les résultats.
+  # Assurez-vous de bien comprendre ce qui est coché ou pas : vous n'aurez plus
+  # cette aide plus tard dans le travail de groupe ou les interrogations !
   
-  expect_true(!(rmd_select(zoo, by_section("Forêt aléatoire")) |>
-      as_document() |> grepl("...choix des métriques ici...",
-        x = _, fixed = TRUE) |> any()))
-  # L'explication sur le choix des métriques et les critères de choix du
-  # meilleur classifieur n'est pas faite
-  # Remplacez "...choix des métriques ici..." par vos phrases de commentaires
-  # libres.
+  expect_true(is_identical_to_ref("metricscomment"))
+  # Le choix des métriques est (partiellement) faux.
+  # Vous devez cocher les phrases qui décrivent le graphique d'un 'x' entre les
+  # crochets [] -> [x]. Ensuite, vous devez recompiler la version HTML du
+  # bloc-notes (bouton 'Rendu') sans erreur pour réactualiser les résultats.
+  # Assurez-vous de bien comprendre ce qui est coché ou pas : vous n'aurez plus
+  # cette aide plus tard dans le travail de groupe ou les interrogations !
 })
 
 test_that("La partie discussion et conclusion est-elle remplie ?", {
-  expect_true(!(rmd_select(zoo, by_section("Discussion et conclusion")) |>
-    as_document() |> grepl("...votre discussion ici...", x = _,
-      fixed = TRUE) |> any()))
-  # La discussion et la conclusion ne sont pas faites
-  # Remplacez "...votre discussion ici..." par vos phrases de commentaires
-  # libres (à noter que le contenu de cette section n'est pas évalué
-  # automatiquement, mais il le sera par vos enseignants).
+  expect_true(is_identical_to_ref("conclusionscomment"))
+  # Les conclusions sont (partiellement) fausses.
+  # Vous devez cocher les phrases qui décrivent le graphique d'un 'x' entre les
+  # crochets [] -> [x]. Ensuite, vous devez recompiler la version HTML du
+  # bloc-notes (bouton 'Rendu') sans erreur pour réactualiser les résultats.
+  # Assurez-vous de bien comprendre ce qui est coché ou pas : vous n'aurez plus
+  # cette aide plus tard dans le travail de groupe ou les interrogations !
 })
