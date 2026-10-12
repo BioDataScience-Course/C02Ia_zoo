@@ -95,23 +95,23 @@ select_answer(r"-{
 
 Les techniques d'analyse d'image suggèrent différentes **variables calculées** (note : vous devez faire une étude attentive de la bibliographie pour cela en pratique). Nous ajoutons celles qui sont renseignées dans l'appendice 3 du mémoire de Thomas Quivy (voir biblio/quivy_master_thesis_appendix3.pdf) :
 
-- Elong = `___` / Minor
+-   Elong = `___` / Minor
 
-- CentBoxD = ((BX + Width/2 - X)^2^ + (BY + Height/2 - Y)^2^)^1/2^
+-   CentBoxD = ((BX + Width/2 - X)^2^ + (BY + Height/2 - Y)^2^)^1/2^
 
-- GrayCenBoxD = ((BX + Width/2 - XM)^2^ + (BY + Height/2 - YM)^2^)^1/2^
+-   GrayCenBoxD = ((BX + Width/2 - XM)^2^ + (BY + Height/2 - YM)^2^)^1/2^
 
-- `___` = ((X - XM)^2^ + (Y - YM)^2^)^1/2^
+-   `___` = ((X - XM)^2^ + (Y - YM)^2^)^1/2^
 
-- Range = Max - Min
+-   Range = Max - Min
 
-- MeanPos = (Max - Mean) / Range
+-   MeanPos = (Max - Mean) / Range
 
-- SDNorm = StdDev / Range
+-   SDNorm = StdDev / Range
 
-- CV = StdDev / Mean \* 100
+-   CV = StdDev / Mean \* 100
 
-- ECD = 2 \* (`Area` / $\Pi$)^1/2^ (déjà calculé)
+-   ECD = 2 \* (`Area` / $\Pi$)^1/2^ (déjà calculé)
 
 <!--% Calculez maintenant ces attributs dérivés. Rappelez-vous que x^1/2 est la racine carrée de x et se note sqrt(x) dans R. -->
 
